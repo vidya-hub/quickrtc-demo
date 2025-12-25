@@ -1,0 +1,72 @@
+{
+  "QuickRTC Server Setup": {
+    "prefix": "quickserver",
+    "scope": "typescript,javascript",
+    "body": [
+      "const quickrtc = new QuickRTCServer({",
+      "  socketServer: io,",
+      "});",
+      "",
+      "await quickrtc.start();"
+    ]
+  },
+  "QuickRTC Create Hook": {
+    "prefix": "createHook",
+    "scope": "typescriptreact,javascriptreact",
+    "body": [
+      "const { rtc, join, produce, leave } = useQuickRTC({ socket });"
+    ]
+  },
+  "QuickRTC Add Client Listeners": {
+    "prefix": "addClientListener",
+    "scope": "typescriptreact,javascriptreact",
+    "body": [
+      "useEffect(() => {",
+      "  if (!rtc) return;",
+      "",
+      "  rtc.on(\"newParticipant\", ({ streams }) => {",
+      "    setRemoteStreams((prev) => [...prev, ...streams]);",
+      "  });",
+      "",
+      "  rtc.on(\"streamAdded\", (stream) => {",
+      "    setRemoteStreams((prev) => [...prev, stream]);",
+      "  });",
+      "",
+      "  rtc.on(\"streamRemoved\", ({ streamId }) => {",
+      "    setRemoteStreams((prev) => prev.filter((s) => s.id !== streamId));",
+      "  });",
+      "",
+      "  rtc.on(\"participantLeft\", ({ participantId }) => {",
+      "    setRemoteStreams((prev) =>",
+      "      prev.filter((s) => s.participantId !== participantId)",
+      "    );",
+      "  });",
+      "}, [rtc]);"
+    ]
+  },
+  "QuickRTC Handle Join": {
+    "prefix": "handlejoin",
+    "scope": "typescriptreact,javascriptreact",
+    "body": [
+      "console.log(\"handle join\");",
+      "await join({ conferenceId, participantName });",
+      "const stream = await navigator.mediaDevices.getUserMedia({",
+      "  video: true,",
+      "  audio: false,",
+      "});",
+      "const streams = await produce(stream.getTracks());",
+      "setLocalStreams(streams);",
+      "setJoined(true);"
+    ]
+  },
+  "QuickRTC Handle Leave": {
+    "prefix": "handleleave",
+    "scope": "typescriptreact,javascriptreact",
+    "body": [
+      "await leave();",
+      "setJoined(false);",
+      "setLocalStreams([]);",
+      "setRemoteStreams([]);"
+    ]
+  }
+}
